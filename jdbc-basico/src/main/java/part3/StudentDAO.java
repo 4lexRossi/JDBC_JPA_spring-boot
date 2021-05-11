@@ -7,16 +7,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlunoDAO {
+public class StudentDAO {
 
     // 1 - Consulta
-    public List<Aluno> list() {
+    public List<Student> list() {
         //Preparar lista que irá retornar alunos após consultar o banco de dados;
-        List<Aluno> alunos = new ArrayList<>();
+        List<Student> students = new ArrayList<>();
 
         try (Connection conn = ConnectionFactory.getConnection()) {
             //Preparar consulta SQL.
-            String sql = "SELECT * FROM aluno";
+            String sql = "SELECT * FROM student";
 
             //Preparar statement com os parâmetros recebidos (nesta função não tem parâmetros, pois irá retornar todos os valores da tabela aluno)
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -27,15 +27,15 @@ public class AlunoDAO {
             //Criar um objeto aluno e guardar na lista de alunos.
             while(rs.next()){
                 int id = rs.getInt("id");
-                String nome = rs.getString("nome");
-                int idade = rs.getInt("idade");
-                String estado = rs.getString("estado");
+                String name = rs.getString("name");
+                int age = rs.getInt("age");
+                String state = rs.getString("state");
 
-                alunos.add(new Aluno(
+                students.add(new Student(
                         id,
-                        nome,
-                        idade,
-                        estado
+                        name,
+                        age,
+                        state
                 ));
             }
         } catch (SQLException e) {
@@ -44,17 +44,17 @@ public class AlunoDAO {
         }
 
         //Retornar todos os alunos encontrados no banco de dados.
-        return alunos;
+        return students;
     }
 
     // 1.1 - Consulta com filtro
-    public Aluno getById(int id) {
+    public Student getById(int id) {
         //Preparar objeto aluno para receber os valores do banco de dados.
-        Aluno aluno = new Aluno();
+        Student student = new Student();
 
         try (Connection conn = ConnectionFactory.getConnection()) {
             //Preparar consulta SQL
-            String sql = "SELECT * FROM aluno WHERE id = ?";
+            String sql = "SELECT * FROM student WHERE id = ?";
 
             //Preparar statement com os parâmetros recebidos
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -65,10 +65,10 @@ public class AlunoDAO {
 
             //Guardar valores retornados da tabela aluno no objeto aluno
             if (rs.next()){
-                aluno.setId(rs.getInt("id"));
-                aluno.setNome(rs.getString("nome"));
-                aluno.setIdade(rs.getInt("idade"));
-                aluno.setEstado(rs.getString("estado"));
+                student.setId(rs.getInt("id"));
+                student.setName(rs.getString("name"));
+                student.setAge(rs.getInt("age"));
+                student.setState(rs.getString("state"));
             }
 
         } catch (SQLException e) {
@@ -77,21 +77,21 @@ public class AlunoDAO {
         }
 
         //Retorna aluno encontrado no banco de dados.
-        return aluno;
+        return student;
     }
 
     // 2 - Inserção
-    public void create(Aluno aluno) {
+    public void create(Student student) {
         try (Connection conn = ConnectionFactory.getConnection()) {
 
             //Preparar SQL para inserção de dados do aluno.
-            String sql = "INSERT INTO aluno(nome, idade, estado) VALUES(?, ?, ?)";
+            String sql = "INSERT INTO student(name, age, state) VALUES(?, ?, ?)";
 
             //Preparar statement com os parâmetros recebidos
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1 , aluno.getNome());
-            stmt.setInt(2, aluno.getIdade());
-            stmt.setString(3 , aluno.getEstado());
+            stmt.setString(1 , student.getName());
+            stmt.setInt(2, student.getAge());
+            stmt.setString(3 , student.getState());
 
             //Executa inserção e armazena o numero de linhas afetadas
             int rowsAffected = stmt.executeUpdate();
@@ -108,7 +108,7 @@ public class AlunoDAO {
         try (Connection conn = ConnectionFactory.getConnection()) {
 
             //Preparar SQL para deletar uma linha.
-            String sql = "DELETE FROM aluno WHERE id = ?";
+            String sql = "DELETE FROM student WHERE id = ?";
 
             //Preparar statement com os parâmetros recebidos
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -125,18 +125,18 @@ public class AlunoDAO {
     }
 
     // 4 - Atualizar
-    public void update(Aluno aluno) {
+    public void update(Student student) {
         try (Connection conn = ConnectionFactory.getConnection()) {
 
             //Preparar SQL para atualizar linhas.
-            String sql = "UPDATE aluno SET nome = ?, idade = ?, estado = ? WHERE id = ?";
+            String sql = "UPDATE student SET name = ?, age = ?, state = ? WHERE id = ?";
 
             //Preparar statement com os parâmetros recebidos
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, aluno.getNome());
-            stmt.setInt(2, aluno.getIdade());
-            stmt.setString(3, aluno.getEstado());
-            stmt.setInt(4, aluno.getId());
+            stmt.setString(1, student.getName());
+            stmt.setInt(2, student.getAge());
+            stmt.setString(3, student.getState());
+            stmt.setInt(4, student.getId());
 
             //Executa atualização e armazena o numero de linhas afetadas
             int rowsAffected = stmt.executeUpdate();
